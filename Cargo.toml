@@ -1,0 +1,9 @@
+[package]
+name = "game"
+version = "0.1.0"
+authors = ["Jaredana <jaredana@pdx.edu>"]
+edition = "2018"
+
+[dependencies]
+piston = "0.42.0"
+piston_window = "0.89.0"
