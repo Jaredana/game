@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 piston = "0.42.0"
 piston_window = "0.89.0"
+find_folder = "*"
