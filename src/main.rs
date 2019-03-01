@@ -64,7 +64,7 @@ fn main() {
     let ref font = assets.join("FiraSans-Regular.ttf");
     let factory = window.factory.clone();
     let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
-    println!("{:?}", window.size().height);
+    println!("{:?}", window.size().height); //This is where we will get actual window size;
     //Clear scren and draw rectangle
     while let Some(event) = window.next() {
     	window.draw_2d(&event, |context, graphics| {
