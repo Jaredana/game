@@ -17,7 +17,7 @@ struct Player {
 	pub position: [f64; 4],
 	pub speed: f64,
 }
-
+//test
 impl Player {
 	fn new() -> Self {
 		Player {
