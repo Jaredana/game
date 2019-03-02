@@ -11,34 +11,11 @@ use piston_window::*;
 use std::string::ToString;
 use math::{Matrix2d, Scalar, Vec2d};
 use {DrawState, Graphics, Line};
+mod player;
+use player::Player;
 
-struct Player {
-	pub color: [f32; 4],
-	pub position: [f64; 4],
-	pub speed: f64,
-}
 
-impl Player {
-	fn new() -> Self {
-		Player {
-			color: [1.0,0.0, 0.0, 1.0],
-			position: [0.0, 0.0, 120.0, 120.0],
-			speed: 12.0 //adjust speed here, should be calc from GCF of screen size/10
-		}
-	}
-	//needs to know screen size and adjust accordingly
-	fn pos_is_valid(&mut self, screen: [u32; 2]) -> bool{
-		if (self.position[0] >= 0.0) & (self.position[0] <= screen[0] as f64 )& (self.position[1] >= 0.0) & (self.position[1] <= screen[1] as f64)  {
-			return true;
-		}
-		return false;
-	}
-	//this is just jank
-	fn reset_pos(&mut self){
-		self.position[0] = 320.0;
-		self.position[1] = 240.0;
-	}
-}
+
 //this should be a member function
 fn player_pos_to_string(pos: [f64; 4])  -> String{
 	let mut x = pos[0].to_string();
@@ -70,7 +47,14 @@ fn main() {
     	window.draw_2d(&event, |context, graphics| {
     		clear([1.0; 4], graphics);
     		let transform = context.transform.trans(10.0, 100.0);
-    		rectangle(player.color, player.position, context.transform, graphics);
+            
+            //check if player is in a valid location before rendering, if not, fix location.
+            if player.pos_is_valid(screen_size) {
+                rectangle(player.color, player.position, context.transform, graphics);
+            }
+    		else {
+                player.reset_pos(screen_size)
+            }
     		text::Text::new_color([0.0,0.0,0.0,1.0], 32).draw(&player_pos_to_string(player.position), &mut glyphs, &context.draw_state, transform, graphics);
     		
     		let grid = Grid {
@@ -99,15 +83,9 @@ fn main() {
 				}
 				_ => (0.0, 0.0)
 		};
-
-		if player.pos_is_valid(screen_size) {
+            //move player
 			player.position[0] += updated_pos.0;
 			player.position[1] += updated_pos.1;
-		}
-		else{
-			player.reset_pos()
-		}
-
 		};
 	}
 }
