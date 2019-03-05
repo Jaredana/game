@@ -3,12 +3,18 @@
 make collision and player pos resseting actually work
 make grid adjust to screen size such that the number of squares is based on screen size
 add enemies
+make borders solid so player cannot go through them
 
 */
+
+//CHECK IF PLAYER LOCATION IS VALID IF NOT SEND THEM TO THE CLOSEST VALID LOCATION	
+//aka checking player.position to see if x,y are in bounds of screen
 extern crate piston_window;
 extern crate find_folder;
 use piston_window::*;
 use std::string::ToString;
+//use math::{Matrix2d, Scalar, Vec2d};
+//use {DrawState, Graphics, Line};
 mod player;
 mod grid;
 use player::Player;
@@ -25,14 +31,13 @@ fn player_pos_to_string(pos: [f64; 4])  -> String{
 
 fn main() {
     let mut player = Player::new();
-
-    //need to set screen_size to monitor resolution
-	let screen_size = [1920,1080];
+    let screen_size = [1920,1080];
+    //Create Game Window
     let mut window: PistonWindow = WindowSettings::new("Hello, Piston!", screen_size)
     	.exit_on_esc(true)
     	.vsync(true)
-		.fullscreen(false)
     	.build().unwrap();
+    
     //get assets for text
     let assets = find_folder::Search::ParentsThenKids(3,3)
     	.for_folder("assets").unwrap();
@@ -40,6 +45,7 @@ fn main() {
     let ref font = assets.join("FiraSans-Regular.ttf");
     let factory = window.factory.clone();
     let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+    println!("{:?}", window.size().height);
     //Clear scren and draw rectangle
     while let Some(event) = window.next() {
     	window.draw_2d(&event, |context, graphics| {
@@ -59,11 +65,10 @@ fn main() {
 					Result::Err(err) =>
 						panic!("text didnt render, err {:?}", err)
 				}
-			//this is where grid can be fit to screen size(set to 1080p manually now) cols = steps left or right 1920/120; rows = steps up or down
     		let grid = Grid {
-    			cols: (screen_size[0]  / player.position[3] as u32) ,
-    			rows: (screen_size[1]  / player.position[3] as u32),
-    			units: player.position[3],
+    			cols: 16,
+    			rows: 9,
+    			units: 120.0,
     		};
     		//we need to draw a line for every 20 units of x and 20 units of y;
     		let line = Line::new([1.0,0.0,0.0,1.0], 1.0);
