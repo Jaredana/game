@@ -8,7 +8,7 @@ impl Player {
 	pub fn new() -> Self {
 		Player {
 			color: [1.0,0.0, 0.0, 1.0],
-			position: [0.0, 0.0, 120.0, 120.0],
+			position: [0.0, 0.0, 120.0, 120.0], //(X, Y, Length, Width)
 			speed: 12.0 //adjust speed here, should be calc from GCF of screen size/10
 		}
 	}
