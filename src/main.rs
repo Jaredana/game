@@ -11,8 +11,11 @@ make borders solid so player cannot go through them
 //aka checking player.position to see if x,y are in bounds of screen
 extern crate piston_window;
 extern crate find_folder;
+extern crate winit;
+use winit::*;
 use piston_window::*;
 use std::string::ToString;
+
 //use math::{Matrix2d, Scalar, Vec2d};
 //use {DrawState, Graphics, Line};
 mod player;
@@ -31,13 +34,18 @@ fn player_pos_to_string(pos: [f64; 4])  -> String{
 
 fn main() {
     let mut player = Player::new();
-    let screen_size = [1920,1080];
+	//get physical size of monitor
+	let test = EventsLoop::new();
+	let test2 = test.get_primary_monitor();
+    let screen_size = [test2.get_dimensions().height as u32,test2.get_dimensions().width as u32];
+	
     //Create Game Window
     let mut window: PistonWindow = WindowSettings::new("Hello, Piston!", screen_size)
     	.exit_on_esc(true)
     	.vsync(true)
+		.fullscreen(true)
     	.build().unwrap();
-    
+     
     //get assets for text
     let assets = find_folder::Search::ParentsThenKids(3,3)
     	.for_folder("assets").unwrap();
@@ -45,7 +53,7 @@ fn main() {
     let ref font = assets.join("FiraSans-Regular.ttf");
     let factory = window.factory.clone();
     let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
-    println!("{:?}", window.size().height); //This is where we will get actual window size;
+    //println!("{:?}", window.size().height); //This is where we will get actual window size;
     //Clear scren and draw rectangle
     while let Some(event) = window.next() {
     	window.draw_2d(&event, |context, graphics| {
