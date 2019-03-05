@@ -3,6 +3,7 @@ use piston_window::*;
 use crate::math::{Matrix2d, Scalar, Vec2d};
 use {DrawState, Graphics, Line};
 
+#[allow(dead_code)]
 #[derive(Debug, Copy, Clone)]
 pub struct Grid {
     /// Number of columns.
@@ -14,13 +15,14 @@ pub struct Grid {
 }
 
 /// Iterates through the cells of a grid as (u32, u32).
+#[allow(dead_code)]
 #[derive(Debug, Copy, Clone)]
 pub struct GridCells {
     cols: u32,
     rows: u32,
     state: u64,
 }
-
+#[allow(dead_code)]
 impl Grid {
     /// Draws the grid.
     pub fn draw<G>(&self, line: &Line, draw_state: &DrawState, transform: Matrix2d, g: &mut G)

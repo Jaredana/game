@@ -9,8 +9,8 @@ extern crate piston_window;
 extern crate find_folder;
 use piston_window::*;
 use std::string::ToString;
-use math::{Matrix2d, Scalar, Vec2d};
-use {DrawState, Graphics, Line};
+//use math::{Matrix2d, Scalar, Vec2d};
+//use {DrawState, Graphics, Line};
 mod player;
 mod grid;
 use player::Player;
@@ -55,8 +55,12 @@ fn main() {
     		else {
                 player.reset_pos(screen_size)
             }
-    		text::Text::new_color([0.0,0.0,0.0,1.0], 32).draw(&player_pos_to_string(player.position), &mut glyphs, &context.draw_state, transform, graphics);
-    		
+    		let my_text = text::Text::new_color([0.0,0.0,0.0,1.0], 32).draw(&player_pos_to_string(player.position), &mut glyphs, &context.draw_state, transform, graphics);
+				match my_text {
+					Result::Ok(val) => val,
+					Result::Err(err) =>
+						panic!("text didnt render, err {:?}", err)
+				}
     		let grid = Grid {
     			cols: 16,
     			rows: 9,
