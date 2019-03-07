@@ -7,5 +7,6 @@ edition = "2018"
 [dependencies]
 piston = "0.42.0"
 piston_window = "0.89.0"
+piston-timer_controller = "0.16.0"
 find_folder = "*"
 winit = "0.18.1"

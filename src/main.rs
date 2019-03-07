@@ -10,14 +10,18 @@ make borders solid so player cannot go through them
 //CHECK IF PLAYER LOCATION IS VALID IF NOT SEND THEM TO THE CLOSEST VALID LOCATION	
 //aka checking player.position to see if x,y are in bounds of screen
 extern crate piston_window;
+extern crate piston;
 extern crate find_folder;
 extern crate winit;
+extern crate timer_controller;
+//use std::sync::mpsc::{Sender, Receiver};
+//use std::sync::mpsc;
+use std::sync::mpsc::channel;
+//use std::io;
 use winit::EventsLoop;
 use piston_window::*;
 use std::string::ToString;
 
-//use math::{Matrix2d, Scalar, Vec2d};
-//use {DrawState, Graphics, Line};
 mod player;
 mod grid;
 mod enemy;
@@ -36,7 +40,14 @@ fn player_pos_to_string(pos: [f64; 4])  -> String{
 
 fn main() {
     let mut player = Player::new();
-	let enemy = Enemy::new();
+	let mut enemy = Enemy::new();
+	
+	//works but is so janked out
+	let (sender, receiver)= channel();
+	enemy.enemy_timer(sender.clone());
+	let init_msg = receiver.recv().unwrap();
+	
+
 	//get physical size of monitor
 	let test = EventsLoop::new();
 	let test2 = test.get_primary_monitor();
@@ -69,6 +80,10 @@ fn main() {
     		else {
                 player.reset_pos(screen_size)
             }
+			let msg = receiver.recv().unwrap();
+			if(msg != init_msg){
+				println!("{:?}", msg);
+			}
     		let my_text = text::Text::new_color([0.0,0.0,0.0,1.0], 32).draw(&player_pos_to_string(player.position), &mut glyphs, &context.draw_state, transform, graphics);
 				match my_text {
 					Result::Ok(val) => val,
