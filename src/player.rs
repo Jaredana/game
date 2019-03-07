@@ -4,6 +4,7 @@ pub struct Player {
 	pub speed: f64,
 }
 
+
 impl Player {
 	pub fn new() -> Self {
 		Player {

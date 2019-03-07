@@ -12,7 +12,7 @@ make borders solid so player cannot go through them
 extern crate piston_window;
 extern crate find_folder;
 extern crate winit;
-use winit::*;
+use winit::EventsLoop;
 use piston_window::*;
 use std::string::ToString;
 
@@ -20,6 +20,8 @@ use std::string::ToString;
 //use {DrawState, Graphics, Line};
 mod player;
 mod grid;
+mod enemy;
+use enemy::Enemy;
 use player::Player;
 use grid::Grid;
 
@@ -34,11 +36,11 @@ fn player_pos_to_string(pos: [f64; 4])  -> String{
 
 fn main() {
     let mut player = Player::new();
+	let enemy = Enemy::new();
 	//get physical size of monitor
 	let test = EventsLoop::new();
 	let test2 = test.get_primary_monitor();
     let screen_size = [test2.get_dimensions().height as u32,test2.get_dimensions().width as u32];
-	
     //Create Game Window
     let mut window: PistonWindow = WindowSettings::new("Hello, Piston!", screen_size)
     	.exit_on_esc(true)
@@ -53,16 +55,16 @@ fn main() {
     let ref font = assets.join("FiraSans-Regular.ttf");
     let factory = window.factory.clone();
     let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
-    //println!("{:?}", window.size().height); //This is where we will get actual window size;
+
     //Clear scren and draw rectangle
     while let Some(event) = window.next() {
     	window.draw_2d(&event, |context, graphics| {
     		clear([1.0; 4], graphics);
     		let transform = context.transform.trans(10.0, 100.0);
-            
             //check if player is in a valid location before rendering, if not, fix location.
             if player.pos_is_valid(screen_size) {
                 rectangle(player.color, player.position, context.transform, graphics);
+				rectangle(enemy.color, enemy.position, context.transform, graphics);
             }
     		else {
                 player.reset_pos(screen_size)
